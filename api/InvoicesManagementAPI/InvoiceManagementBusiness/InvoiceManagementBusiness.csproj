@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Intefaces\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\InvoiceManagementData\InvoiceManagementData.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,8 @@
-﻿namespace InvoiceManagementBusiness.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace InvoiceManagementData.Models
 {
+    [Table("Invoice")]
     public class Invoice
     {
         public int Id { get; set; }
@@ -11,6 +14,6 @@
         public int InvoiceStatus { get; set; }
         public DateTime IssueDate { get; set; }
         public DateTime BillingDate { get; set; }
-        public DateTime PaymentDate { get; set; }
+        public DateTime? PaymentDate { get; set; }
     }
 }
