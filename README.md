@@ -40,6 +40,9 @@ client.BaseAddress = new Uri("https://host.docker.internal:32773");
 Caso seja diferente, basta alterar essa porta e tudo funcionará como deve ser.
 
 ### UI
-![image](https://github.com/user-attachments/assets/efc710aa-d56b-48d0-a945-548333fdf3cd)
+![image](https://github.com/user-attachments/assets/28b661fe-a04c-4ea4-91cc-bd9999c389ad)
 
-![image](https://github.com/user-attachments/assets/0207d03d-d85f-4a9b-a195-97691f37d0ec)
+![image](https://github.com/user-attachments/assets/91631e26-efca-465a-b1f3-8ca867de876c)
+
+![image](https://github.com/user-attachments/assets/0379350a-6f22-4b6f-a2e5-5c7666b87a86)
+
