@@ -12,8 +12,9 @@ namespace InvoiceManagementData.Models
         public required string InvoiceDocument { get; set; }
         public required string BankSlipDocument { get; set; }
         public int InvoiceStatus { get; set; }
+        public bool PaymentPromise { get; set; }
         public DateTime IssueDate { get; set; }
-        public DateTime BillingDate { get; set; }
+        public DateTime? BillingDate { get; set; }
         public DateTime? PaymentDate { get; set; }
     }
 }

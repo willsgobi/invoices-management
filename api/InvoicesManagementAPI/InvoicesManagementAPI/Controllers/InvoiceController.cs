@@ -1,5 +1,5 @@
 ﻿using InvoiceManagementBusiness.Intefaces;
-using Microsoft.AspNetCore.Http.HttpResults;
+using InvoiceManagementData.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InvoicesManagementAPI.Controllers
@@ -15,12 +15,27 @@ namespace InvoicesManagementAPI.Controllers
             _invoiceService = invoiceService;
         }
 
-        [HttpGet(Name = "GetInvoices")]
-        public async Task<IActionResult> Get()
+        [HttpGet("invoices", Name = "GetInvoices")]
+        public async Task<IActionResult> Get([FromQuery] InvoiceFilters filters)
         {      
             try
             {
-                var list = await _invoiceService.GetAll();
+                var list = await _invoiceService.GetFiltered(filters);
+
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }            
+        }
+
+        [HttpGet("reports", Name = "GetReports")]
+        public async Task<IActionResult> GetReports(DateTime? startAt, DateTime? endAt)
+        {
+            try
+            {
+                var list = await _invoiceService.GetReports(startAt, endAt);
 
                 return Ok(list);
             }
@@ -28,8 +43,6 @@ namespace InvoicesManagementAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
-            
         }
     }
 }
