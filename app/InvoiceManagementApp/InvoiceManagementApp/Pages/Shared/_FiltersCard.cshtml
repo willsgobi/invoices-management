@@ -1,16 +1,23 @@
 ﻿@using System.Globalization;
 @model InvoiceManagementApp.Models.FilterModel;
 
+@{
+    var hasFilter = Model != null && !string.IsNullOrWhiteSpace(Model.FilterType) && !string.IsNullOrWhiteSpace(Model.FilterValue);
+}
+
 <div class="row mb-4">
-    @if (Model != null && !string.IsNullOrWhiteSpace(Model.FilterType) && !string.IsNullOrWhiteSpace(Model.FilterValue))
+    @if (hasFilter)
     {
-        <span>Filtro: @Model.FilterType/@Model.FilterValue</span>
+        <span>Filtro: @Model!.FilterType/@Model.FilterValue</span>        
     }
     <div class="col d-flex justify-content-end gap-3 align-content-center">
         <form method="post" id="formFilter">
+            @if(hasFilter) {
+                <a href="/" class="btn btn-warning btn-sm">Limpar filtro</a>
+            }
+
             <input type="hidden" name="typeFilter" id="typeFilter" value="0" />
-            <div class="btn-group">
-                <!-- Filtro Mensal -->
+            <div class="btn-group">                
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMensal" data-bs-toggle="dropdown" aria-expanded="false">
                     Filtrar por mês
                 </button>
@@ -25,20 +32,20 @@
                 </ul>
             </div>
 
-            <div class="btn-group ms-2">
-                <!-- Filtro Semestral -->
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownSemestral" data-bs-toggle="dropdown" aria-expanded="false">
-                    Filtrar por semestre
+            <div class="btn-group ms-2">                
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownTrimestral" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filtrar por trimestre
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownSemestral">
-                    <input type="hidden" name="filterSemester" id="filterSemester" value="0" />
-                    <li><button type="button" class="dropdown-item" href="#" onclick="setFilter('semestral', '1')">Primeiro Semestre</button></li>
-                    <li><button type="button" class="dropdown-item" href="#" onclick="setFilter('semestral', '2')">Segundo Semestre</button></li>
+                <ul class="dropdown-menu" aria-labelledby="dropdownTrimestral">
+                    <input type="hidden" name="filterQuarter" id="filterQuarter" value="0" />
+                    <li><button type="button" class="dropdown-item" href="#" onclick="setFilter('trimestral', '1')">Primeiro</button></li>
+                    <li><button type="button" class="dropdown-item" href="#" onclick="setFilter('trimestral', '2')">Segundo</button></li>
+                    <li><button type="button" class="dropdown-item" href="#" onclick="setFilter('trimestral', '3')">Terceiro</button></li>
+                    <li><button type="button" class="dropdown-item" href="#" onclick="setFilter('trimestral', '4')">Quarto</button></li>
                 </ul>
             </div>
 
-            <div class="btn-group ms-2">
-                <!-- Filtro Anual -->
+            <div class="btn-group ms-2">                
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownAnual" data-bs-toggle="dropdown" aria-expanded="false">
                     Filtrar por ano
                 </button>
@@ -61,9 +68,9 @@
         if (type === 'mensal') {
             document.getElementById('dropdownMensal').textContent = 'Mês: ' + new Date(2000, value - 1).toLocaleString('pt-BR', { month: 'long' });
             document.getElementById("filterMonth").value = value
-        } else if (type === 'semestral') {
-            document.getElementById('dropdownSemestral').textContent = 'Semestre: ' + (value === '1' ? 'Primeiro' : 'Segundo');            
-            document.getElementById("filterSemester").value = value
+        } else if (type === 'trimestral') {
+            document.getElementById('dropdownTrimestral').textContent = 'Trimestre: ' + (value === '1' ? 'Primeiro' : value === '2' ? 'Segundo' : value === '3' ? 'Terceiro' : 'Quarto');            
+            document.getElementById("filterQuarter").value = value
         } else if (type === 'anual') {
             document.getElementById('dropdownAnual').textContent = 'Ano: ' + value; 
             document.getElementById("filterYear").value = value

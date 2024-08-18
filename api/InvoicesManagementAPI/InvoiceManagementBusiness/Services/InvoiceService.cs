@@ -19,7 +19,7 @@ namespace InvoiceManagementBusiness.Services
             return await _invoiceRepository.GetAll();
         }
 
-        public async Task<IEnumerable<Invoice>> GetFiltered(InvoiceFilters filters)
+        public async Task<PagedItems> GetFiltered(InvoiceFilters filters)
         {
             return await _invoiceRepository.GetFiltered(filters);
         }

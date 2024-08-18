@@ -1,0 +1,118 @@
+﻿@using System.Text.Json
+@using System.Globalization
+@using InvoiceManagementApp.Enums
+@using InvoiceManagementApp.Extensions
+
+@{
+    var invoiceStatus = Enum.GetValues(typeof(InvoiceStatus)).Cast<InvoiceStatus>();
+}
+
+<div class="col m-6 d-flex justify-content-end gap-3 align-content-center">
+    @if(TempData["FilterDescription"] != null)
+    {
+        <span>Filtro: @TempData["FilterDescription"]?.ToString()</span>
+        <a href="/invoicelist" class="btn btn-warning btn-sm">Limpar filtro</a>
+    }
+    <form method="post" id="formInvoiceFilter">
+        <input type="hidden" name="typeFilter" id="typeFilter" value="0" />
+        <input type="hidden" name="valueFilter" id="valueFilter" value="0" />
+        <input type="hidden" name="filterDescription" id="filterDescription" value="" />
+
+        <div class="btn-group">
+            <!-- Filtro Mensal -->
+            <button class="btn btn-secondary dropdown-toggle me-2" type="button" id="dropdownFilter" data-bs-toggle="dropdown" aria-expanded="false">
+                Opções de filtro
+            </button>
+            <ul class="dropdown-menu m-2" aria-labelledby="dropdownFilter">
+                <li>
+                    <button type="button" class="dropdown-item text-capitalize" href="#" onclick="setInvoiceFilter('IssuedMonth', 'Mês de emissão da nota')">Mês de emissão da nota</button>
+                </li>
+                <li>
+                    <button type="button" class="dropdown-item text-capitalize" href="#" onclick="setInvoiceFilter('BillingMonth', 'Mês de cobrança da nota')">Mês de cobrança da nota</button>
+                </li>
+                <li>
+                    <button type="button" class="dropdown-item text-capitalize" href="#" onclick="setInvoiceFilter('PaymentMonth', 'Mês de pagamento da nota')">Mês de pagamento da nota</button>
+                </li>
+                <li>
+                    <button type="button" class="dropdown-item text-capitalize" href="#" onclick="setInvoiceFilter('InvoiceStatus', 'Status da nota')">Status da nota</button>
+                </li>                
+            </ul>
+            
+            <div class="visually-hidden" id="contentMonth">
+                <button class="btn btn-secondary dropdown-toggle me-2" type="button" id="dropdownMensal" data-bs-toggle="dropdown" aria-expanded="false">
+                Selecione o mês
+            </button>
+            <ul id="filterDate" class="dropdown-menu" aria-labelledby="dropdownMensal">
+                    <input type="hidden" name="filterMonth" id="filterMonth" value="0" />
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <li>
+                            <button type="button" class="dropdown-item text-capitalize" href="#" onclick="setMonthFilter('@DateTimeFormatInfo.GetInstance(new CultureInfo("pt-BR")).GetMonthName(i)', '@i')">@DateTimeFormatInfo.GetInstance(new CultureInfo("pt-BR")).GetMonthName(i)</button>
+                        </li>
+                    }
+                </ul>
+            </div>
+            
+
+            @if(invoiceStatus != null)
+            {
+                <div class="visually-hidden" id="contentInvoiceStatus">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownStatus" data-bs-toggle="dropdown" aria-expanded="false">
+                        Selecione
+                    </button>
+                    <ul class="dropdown-menu m-2" id="filterStatus" aria-labelledby="dropdownStatus">
+                        @foreach (var status in invoiceStatus)
+                        {
+                            <li>
+                                <button type="button" class="dropdown-item" onclick="setInvoiceStatus('@status.GetDescription()', '@status')">
+                                    @status.GetDescription()
+                                </button>
+                            </li>
+                        }                        
+                    </ul>
+                </div> 
+            }   
+            
+            <button type="button" id="buttonSubmitFilters" class="btn btn-info ms-2">Filtrar</button>
+        </div>        
+    </form>
+</div>
+
+<script>
+    function setInvoiceFilter(type, value) {        
+        document.getElementById('dropdownFilter').textContent = value;
+        document.getElementById("typeFilter").value = type;
+        document.getElementById("filterDescription").value = value;
+
+        if(type != 'InvoiceStatus') {
+            document.getElementById("contentMonth")?.classList.remove("visually-hidden")
+            document.getElementById("contentInvoiceStatus")?.classList.add("visually-hidden")
+        }   else {
+            document.getElementById("contentMonth")?.classList.add("visually-hidden")
+            document.getElementById("contentInvoiceStatus")?.classList.remove("visually-hidden")
+        }    
+    }
+
+    function setMonthFilter(monthText, monthIndex) {
+        document.getElementById('dropdownMensal').textContent = monthText;
+        document.getElementById("valueFilter").value = monthIndex;
+        document.getElementById("filterDescription").value += " (" + monthText + ")";
+    }
+
+    function setInvoiceStatus(selected, currentEnum) {
+        document.getElementById('dropdownStatus').textContent = selected;
+        document.getElementById("valueFilter").value = currentEnum;
+        document.getElementById("filterDescription").value += " (" + selected + ")";
+    }
+
+    document.getElementById("buttonSubmitFilters").addEventListener("click", function() {
+        let valueFilter = document.getElementById("valueFilter").value
+        let valueType = document.getElementById("typeFilter").value;
+
+        if(valueFilter != 0 && valueType != 0) {
+            document.getElementById("formInvoiceFilter").submit()
+        } else {
+            alert("Para filtrar é necessário selecionar os filtros corretamente.")
+        }
+    })
+</script>

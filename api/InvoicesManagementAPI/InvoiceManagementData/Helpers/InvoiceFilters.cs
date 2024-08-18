@@ -1,7 +1,7 @@
 ﻿namespace InvoiceManagementData.Helpers
 {
     public class InvoiceFilters
-    {
+    {        
         public int? IssuedMonth
         {
             get; set;
@@ -38,6 +38,7 @@
         {
             get; set;
         }
+        public int? Page { get; set; }
         public DateTime? StartAt
         {
             get; set;

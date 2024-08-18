@@ -21,14 +21,24 @@
     }
 </style>
 
-<div class="container-fluid">
-    <div class="row">
-        <span class="display-6 mt-5">Relatórios</span>
-        <hr />
-        <div class="col">
-            @await Html.PartialAsync("_FiltersCard", Model.FilterModel)
-            @await Html.PartialAsync("_DashboardCards", Model.ApiResponse)
-            @await Html.PartialAsync("_ReportsGraph", Model.ApiResponse)
+<div class="container">
+    <div class="container-fluid" style="width: 80vw;">
+        <div class="row">
+            <span class="display-6 mt-4">Relatórios</span>
+                <hr />
+                <div class="col">
+                    @if (Model.ErrorMessage != null)
+                    {
+                        <div>@Model.ErrorMessage</div>
+                    }
+                    else
+                    {
+                        @await Html.PartialAsync("_FiltersCard", Model.FilterModel)
+                        @await Html.PartialAsync("_DashboardCards", Model.Reports)
+                        @await Html.PartialAsync("_ReportsGraph", Model.Reports)
+                    }
+
+                </div>
         </div>
     </div>
 </div>

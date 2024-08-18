@@ -8,7 +8,7 @@ builder.Services.AddRazorPages();
 // Se você estiver usando o ReportsService em vez de HttpClientService, registre-o da mesma forma
 builder.Services.AddHttpClient<InvoiceService>(client =>
 {
-    client.BaseAddress = new Uri("https://host.docker.internal:32769");
+    client.BaseAddress = new Uri("https://host.docker.internal:32773");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 }).ConfigurePrimaryHttpMessageHandler(() =>
 {

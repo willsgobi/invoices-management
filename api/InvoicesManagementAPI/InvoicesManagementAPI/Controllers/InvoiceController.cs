@@ -15,9 +15,9 @@ namespace InvoicesManagementAPI.Controllers
             _invoiceService = invoiceService;
         }
 
-        [HttpGet("invoices", Name = "GetInvoices")]
+        [HttpGet("", Name = "GetInvoices")]
         public async Task<IActionResult> Get([FromQuery] InvoiceFilters filters)
-        {      
+        {
             try
             {
                 var list = await _invoiceService.GetFiltered(filters);
