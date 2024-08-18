@@ -21,24 +21,27 @@
     }
 </style>
 
-<div class="container">
-    <div class="container-fluid" style="width: 80vw;">
-        <div class="row">
-            <span class="display-6 mt-4">Relatórios</span>
-                <hr />
-                <div class="col">
-                    @if (Model.ErrorMessage != null)
-                    {
-                        <div>@Model.ErrorMessage</div>
-                    }
-                    else
-                    {
-                        @await Html.PartialAsync("_FiltersCard", Model.FilterModel)
-                        @await Html.PartialAsync("_DashboardCards", Model.Reports)
-                        @await Html.PartialAsync("_ReportsGraph", Model.Reports)
-                    }
+<div class="col-md-12 m-2 p-4">
+    <div class="row">
+        <button style="width: 30px; height: 30px;" class="btn btn-dark btn-sm p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22px" height="24px"  fill="none">
+                <path d="M4 6H20M4 12H20M4 18H20" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </button>
+        <span class="display-6 mt-4">Relatórios</span>
+    </div>
+    <hr />
+    <div>
+        @if (Model.ErrorMessage != null)
+        {
+            <div>@Model.ErrorMessage</div>
+        }
+        else
+        {
+            @await Html.PartialAsync("_FiltersCard", Model.FilterModel)
+            @await Html.PartialAsync("_DashboardCards", Model.Reports)
+            @await Html.PartialAsync("_ReportsGraph", Model.Reports)
+        }
 
-                </div>
-        </div>
     </div>
 </div>
