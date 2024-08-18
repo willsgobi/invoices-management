@@ -39,7 +39,7 @@ namespace InvoiceManagementApp.Models
         {
             get; set;
         }
-        [DisplayName("Promessa de pagamento")]
+        [DisplayName("Inadimplência")]
         public bool PaymentPromise
         {
             get; set;
