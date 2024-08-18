@@ -95,11 +95,10 @@ namespace InvoiceManagementData.Repositories
             }
 
             // Valor total das notas emitidas
-            var totalAmoutIssuedInvoice = query.Where(invoice => invoice.InvoiceStatus == 1)
-                                               .Sum(amount => amount.InvoiceAmount);
+            var totalAmoutIssuedInvoice = query.Sum(amount => amount.InvoiceAmount);
 
             // Valor total das notas emitidas, mas sem ter a cobrança feita
-            var totalAmoutWithoutBilling = query.Where(invoice => invoice.BillingDate == null)
+            var totalAmoutWithoutBilling = query.Where(invoice => invoice.BillingDate == null && invoice.PaymentDate == null && !invoice.PaymentPromise)
                                                 .Sum(amount => amount.InvoiceAmount);
 
             // Valor total das notas vencidas - Inadimplência
@@ -107,7 +106,7 @@ namespace InvoiceManagementData.Repositories
                                                     .Sum(amount => amount.InvoiceAmount);
 
             // Valor total das notas a vencer
-            var totalAmoutWithoutPayment = query.Where(invoice => invoice.PaymentDate == null)
+            var totalAmoutWithoutPayment = query.Where(invoice => invoice.PaymentDate == null && invoice.BillingDate != null && !invoice.PaymentPromise)
                                                 .Sum(amount => amount.InvoiceAmount);
 
             // Valor total das notas pagas
@@ -115,24 +114,96 @@ namespace InvoiceManagementData.Repositories
                                              .Sum(amount => amount.InvoiceAmount);
 
             // Gráfico de evolução da inadimplência mês a mês
-            var totalCountWithoutPayment = query.Where(invoice => invoice.PaymentDate == null)
-                                                .GroupBy(invoice => new
-                                                {
-                                                    invoice.IssueDate.Month,
-                                                    invoice.IssueDate.Year,
-                                                })
-                                                .Select(g => new InvoicesMonth
-                                                {
-                                                    Month = g.Key.Month,
-                                                    Year = g.Key.Year,
-                                                    Count = g.Count()
-                                                })
-                                                .OrderBy(result => result.Year)
-                                                .ThenBy(result => result.Month)
-                                                .ToList();
+            var totalCountWithoutPayment = new List<InvoicesMonth>();
 
             //○ Gráfico de evolução da receita recebida mês a mês;
-            var totalCountWithPayment = query.Where(invoice => invoice.PaymentDate != null)
+            var totalCountWithPayment = new List<InvoicesMonth>();
+
+            if (startAt.HasValue && endAt.HasValue)
+            {
+                if (startAt.Value.Month == endAt.Value.Month)
+                {
+                    totalCountWithoutPayment = query.Where(invoice => invoice.PaymentDate == null)
+                                                        .GroupBy(invoice => new
+                                                        {
+                                                            invoice.IssueDate.Day,
+                                                            invoice.IssueDate.Month,
+                                                        })
+                                                        .Select(g => new InvoicesMonth
+                                                        {
+                                                            Day = g.Key.Day,
+                                                            Month = g.Key.Month,
+                                                            Count = g.Count()
+                                                        })
+                                                        .OrderBy(result => result.Day)
+                                                        .ThenBy(result => result.Month)
+                                                        .ToList();
+
+                    totalCountWithPayment = query.Where(invoice => invoice.PaymentDate != null)
+                                                .GroupBy(invoice => new
+                                                {
+                                                    invoice.IssueDate.Month,
+                                                    invoice.IssueDate.Day,
+                                                })
+                                                .Select(g => new InvoicesMonth
+                                                {
+                                                    Month = g.Key.Month,
+                                                    Day = g.Key.Day,
+                                                    Count = g.Count()
+                                                })
+                                                .OrderBy(result => result.Month)
+                                                .ToList();
+                }
+
+                if (startAt.Value.Month == 1 && endAt.Value.Month == 6)
+                {
+                    totalCountWithoutPayment = query.Where(invoice => invoice.PaymentDate == null)
+                                                        .GroupBy(invoice => new
+                                                        {
+                                                            invoice.IssueDate.Month,
+                                                        })
+                                                        .Select(g => new InvoicesMonth
+                                                        {
+                                                            Month = g.Key.Month,
+                                                            Count = g.Count()
+                                                        })
+                                                        .OrderBy(result => result.Month)
+                                                        .ToList();
+
+                    totalCountWithPayment = query.Where(invoice => invoice.PaymentDate != null)
+                                                .GroupBy(invoice => new
+                                                {
+                                                    invoice.IssueDate.Month
+                                                })
+                                                .Select(g => new InvoicesMonth
+                                                {
+                                                    Month = g.Key.Month,
+                                                    Count = g.Count()
+                                                })                                                
+                                                .OrderBy(result => result.Month)
+                                                .ToList();
+                }
+            }
+
+            if (totalCountWithoutPayment.Count == 0)
+            {
+                totalCountWithoutPayment = query.Where(invoice => invoice.PaymentDate == null)
+                                                    .GroupBy(invoice => new
+                                                    {
+                                                        invoice.IssueDate.Month,
+                                                        invoice.IssueDate.Year,
+                                                    })
+                                                    .Select(g => new InvoicesMonth
+                                                    {
+                                                        Month = g.Key.Month,
+                                                        Year = g.Key.Year,
+                                                        Count = g.Count()
+                                                    })
+                                                    .OrderBy(result => result.Year)
+                                                    .ThenBy(result => result.Month)
+                                                    .ToList();
+
+                totalCountWithPayment = query.Where(invoice => invoice.PaymentDate != null)
                                                 .GroupBy(invoice => new
                                                 {
                                                     invoice.IssueDate.Month,
@@ -147,6 +218,7 @@ namespace InvoiceManagementData.Repositories
                                                 .OrderBy(result => result.Year)
                                                 .ThenBy(result => result.Month)
                                                 .ToList();
+            }            
 
             var reports = new Reports
             {

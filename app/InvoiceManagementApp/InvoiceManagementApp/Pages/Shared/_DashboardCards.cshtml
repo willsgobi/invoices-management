@@ -1,0 +1,42 @@
+﻿@using System.Globalization;
+@model InvoiceManagementApp.Models.Reports
+
+@if (Model == null)
+{
+    <div>Carregando...</div>
+}
+else
+{
+    <div class="row d-flex flex-wrap justify-content-between gap-3 pe-5 ps-5">
+        <div class="card text-white bg-dark" style="max-width: 18rem; max-height: 8rem;">
+            <div class="card-header">Total de notas emitidas</div>
+            <div class="card-body text-center">
+                <h3 class="text-center">@Model.TotalAmoutIssuedInvoice.ToString("C2", new CultureInfo("pt-BR"))</h3>
+            </div>
+        </div>
+        <div class="card text-white bg-warning" style="max-width: 18rem; max-height: 8rem;">
+            <div class="card-header">Total sem cobrança</div>
+            <div class="card-body text-center">
+                <h3 class="text-center">@Model.TotalAmountWithoutBilling.ToString("C2", new CultureInfo("pt-BR"))</h3>
+            </div>
+        </div>
+        <div class="card text-white bg-danger" style="max-width: 18rem;  max-height: 8rem;">
+            <div class="card-header">Total de notas vencidas</div>
+            <div class="card-body text-center">
+                <h3 class="text-center">@Model.TotalAmountWithoutPayment.ToString("C2", new CultureInfo("pt-BR"))</h3>
+            </div>
+        </div>
+        <div class="card text-white bg-info" style="max-width: 18rem;  max-height: 8rem;">
+            <div class="card-header">Total de Notas a vencer</div>
+            <div class="card-body text-center">
+                <h3>@Model.TotalAmountWithPaymentPromise.ToString("C2", new CultureInfo("pt-BR"))</h3>
+            </div>
+        </div>
+        <div class="card text-white bg-success mr-auto" style="max-width: 18rem;  max-height: 8rem;">
+            <div class="card-header">Total de Notas pagas</div>
+            <div class="card-body text-center">
+                <h3>@Model.TotalAmountPaymentInvoices.ToString("C2", new CultureInfo("pt-BR"))</h3>
+            </div>
+        </div>
+    </div>
+}

@@ -1,4 +1,4 @@
-﻿namespace InvoiceManagementData.Models
+﻿namespace InvoiceManagementApp.Models
 {
     public class Reports
     {
@@ -22,24 +22,7 @@
         {
             get; set;
         }
-        public required List<InvoicesMonth> TotalCountWithoutPayment
-        {
-            get; set;
-        }
-        public required List<InvoicesMonth> TotalCountWithPayment
-        {
-            get; set;
-        }
-    }
-
-    public class InvoicesMonth
-    {
-        public int Month { get; set; }
-        public int? Day { get; set; }
-        public int? Year
-        {
-            get; set;
-        }
-        public int Count { get; set; }
+        public List<InvoicesMonth> TotalCountWithoutPayment { get; set; } = [];
+        public List<InvoicesMonth> TotalCountWithPayment { get; set; } = [];
     }
 }

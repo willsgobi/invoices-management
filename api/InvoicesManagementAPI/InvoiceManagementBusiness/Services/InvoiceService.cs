@@ -26,9 +26,7 @@ namespace InvoiceManagementBusiness.Services
 
         public async Task<Reports> GetReports(DateTime? startAt, DateTime? endAt)
         {
-            
-
-            return await _invoiceRepository.GetReports(startAt, endAt);
+            return _invoiceRepository.GetReports(startAt, endAt);
         }
     }
 }

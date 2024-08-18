@@ -1,0 +1,74 @@
+﻿@using System.Globalization;
+@model InvoiceManagementApp.Models.FilterModel;
+
+<div class="row mb-4">
+    @if (Model != null && !string.IsNullOrWhiteSpace(Model.FilterType) && !string.IsNullOrWhiteSpace(Model.FilterValue))
+    {
+        <span>Filtro: @Model.FilterType/@Model.FilterValue</span>
+    }
+    <div class="col d-flex justify-content-end gap-3 align-content-center">
+        <form method="post" id="formFilter">
+            <input type="hidden" name="typeFilter" id="typeFilter" value="0" />
+            <div class="btn-group">
+                <!-- Filtro Mensal -->
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMensal" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filtrar por mês
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMensal">
+                    <input type="hidden" name="filterMonth" id="filterMonth" value="0" />
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <li>
+                            <button type="button" class="dropdown-item text-capitalize" href="#" onclick="setFilter('mensal', '@i')">@DateTimeFormatInfo.GetInstance(new CultureInfo("pt-BR")).GetMonthName(i)</button>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="btn-group ms-2">
+                <!-- Filtro Semestral -->
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownSemestral" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filtrar por semestre
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownSemestral">
+                    <input type="hidden" name="filterSemester" id="filterSemester" value="0" />
+                    <li><button type="button" class="dropdown-item" href="#" onclick="setFilter('semestral', '1')">Primeiro Semestre</button></li>
+                    <li><button type="button" class="dropdown-item" href="#" onclick="setFilter('semestral', '2')">Segundo Semestre</button></li>
+                </ul>
+            </div>
+
+            <div class="btn-group ms-2">
+                <!-- Filtro Anual -->
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownAnual" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filtrar por ano
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownAnual">
+                    <input type="hidden" name="filterYear" id="filterYear" value="0" />
+                    @for (int i = DateTime.Now.Year - 1; i <= DateTime.Now.Year - 1; i++)
+                    {
+                        <li><button type="button" class="dropdown-item" href="#" onclick="setFilter('anual', '@i')">@i</button></li>
+                    }
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function setFilter(type, value) {
+        document.getElementById("typeFilter").value = type
+        console.log(type, value);
+        if (type === 'mensal') {
+            document.getElementById('dropdownMensal').textContent = 'Mês: ' + new Date(2000, value - 1).toLocaleString('pt-BR', { month: 'long' });
+            document.getElementById("filterMonth").value = value
+        } else if (type === 'semestral') {
+            document.getElementById('dropdownSemestral').textContent = 'Semestre: ' + (value === '1' ? 'Primeiro' : 'Segundo');            
+            document.getElementById("filterSemester").value = value
+        } else if (type === 'anual') {
+            document.getElementById('dropdownAnual').textContent = 'Ano: ' + value; 
+            document.getElementById("filterYear").value = value
+        }
+
+        document.getElementById("formFilter").submit();
+    }
+</script>
